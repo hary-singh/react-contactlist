@@ -1,8 +1,18 @@
 import { Component } from 'react';
+import ContactForm from './ContactForm';
 // import React from 'react'
+
 class Contact extends Component {
+  state = { editing: false }
+
+  toggleEdit = () => {
+    const { editing } = this.state
+    this.setState({ editing: !editing })
+  }
+
   render() {
-    const { firstName, phone, id, removeContact } = this.props
+    const { editing } = this.state
+    const { firstName, phone, id, removeContact, updateContact } = this.props
     return(
       <div>
         <h1>{firstName}</h1>
@@ -10,9 +20,15 @@ class Contact extends Component {
         <button onClick={() => removeContact(id)}>
             Delete
         </button>
-        <button>Edit</button>
+        { 
+          editing ?
+          <ContactForm {...this.props} toggleEdit={this.toggleEdit} />
+          :
+          <button onClick={() => this.toggleEdit()}>Edit</button>
+        }
       </div>
     )
   }
 }
+
 export default Contact;

@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import ContactList from './components/contacts/ContactList';
 import ContactForm from './components/contacts/ContactForm';
+
 class App extends Component {
   state = {
     contacts: [
@@ -10,6 +11,7 @@ class App extends Component {
       // { id: 4, firstName: "bob", phone: '123123123'}
     ]
   }
+
   getId = () => {
     // NOTE We are just using this as a helper function for id's since we aren't using a db yet
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -23,6 +25,7 @@ class App extends Component {
     let newContact = { id: this.getId(), ...incommingContact }
     this.setState({ contacts: [...contacts, newContact ]})
   }
+                 // 3
   removeContact = (id) => {
     const contacts = this.state.contacts.filter( c => {
       if (c.id !== id) {
@@ -30,7 +33,22 @@ class App extends Component {
       }
     })
     this.setState({ contacts: [...contacts] })
+  } 
+
+  updateContact = (incommingContact) => {
+    const { contacts } = this.state
+    const { id } = incommingContact
+    this.setState({
+      contacts: contacts.map( c => {
+        if (c.id === id) {
+          return { ...incommingContact }
+          // return incommingContact
+        }
+        return c
+      })
+    })
   }
+
   render() {
     const { contacts, age } = this.state 
     // const contacts = this.state.contacts
@@ -40,9 +58,14 @@ class App extends Component {
       <>
         <h1>React Contact List</h1>
         <ContactForm addContact={this.addContact} />
-        <ContactList contacts={contacts} removeContact={this.removeContact} />
+        <ContactList 
+          contacts={contacts} 
+          removeContact={this.removeContact}
+          updateContact={this.updateContact}
+        />
       </>
     )
   }
 }
+
 export default App;
